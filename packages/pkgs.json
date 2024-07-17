@@ -1,0 +1,22 @@
+[
+ {
+  "path": "/packages/tools/EasyFlash", 
+  "ver": "v4.1.0", 
+  "name": "EASYFLASH"
+ }, 
+ {
+  "path": "/packages/system/syswatch", 
+  "ver": "latest", 
+  "name": "SYSWATCH"
+ }, 
+ {
+  "path": "/packages/peripherals/agile_button", 
+  "ver": "v1.1.1", 
+  "name": "AGILE_BUTTON"
+ }, 
+ {
+  "path": "/packages/peripherals/agile_led", 
+  "ver": "v1.1.1", 
+  "name": "AGILE_LED"
+ }
+]
