@@ -113,6 +113,6 @@ void rtc_init(void)
     HAL_NVIC_EnableIRQ(RTC_Alarm_IRQn);
 
     rtc_sem = rt_sem_create("rtc_sem", 0, RT_IPC_FLAG_FIFO);
-//    rtc_thread = rt_thread_create("rtc_thread", rtc_thread_entry, RT_NULL, 2048, 10, 10);
-//    rt_thread_startup(rtc_thread);
+    rtc_thread = rt_thread_create("rtc_thread", rtc_thread_entry, RT_NULL, 2048, 10, 10);
+    rt_thread_startup(rtc_thread);
 }
