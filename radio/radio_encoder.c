@@ -104,14 +104,13 @@ void rf_encode_entry(void *paramaeter)
 
 void RadioQueue_Init(void)
 {
-//    int *p;
-//    p=(int *)(0x0803FFF0);//这就是已知的地址，要强制类型转换
-//    local_address = *p;//从Flash加载ID
-//    if (local_address == 0xFFFFFFFF || local_address == 0)
-//    {
-//        local_address = 40000000;
-//    }
-    local_address = 40000000;
+    int *p;
+    p=(int *)(0x0803FFF0);//这就是已知的地址，要强制类型转换
+    local_address = *p;//从Flash加载ID
+    if (local_address == 0xFFFFFFFF || local_address == 0)
+    {
+        local_address = 40000000;
+    }
     LOG_I("local_address is %d\r\n", local_address);
 
     rf_en_mq = rt_mq_create("rf_en_mq", 260, 5, RT_IPC_FLAG_PRIO);
