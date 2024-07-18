@@ -128,7 +128,8 @@ int8_t get_free_device_slot(void)
         }
         index++;
     }
-    return RT_ERROR;
+
+    return -1;
 }
 
 void delete_select_device_slot(uint32_t index)
@@ -171,7 +172,7 @@ aqualarm_device_t *aq_device_create(uint8_t main_ver,uint8_t sub_ver,int rssi,ui
     }
 
     int8_t slot = get_free_device_slot();
-    if(slot == RT_ERROR)
+    if(slot < 0)
     {
         return RT_NULL;
     }

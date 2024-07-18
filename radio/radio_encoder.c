@@ -111,7 +111,7 @@ void RadioQueue_Init(void)
     {
         local_address = 40000000;
     }
-    LOG_I("System Version:%s,local_address:%ld,\r\n",MCU_VER,local_address);
+    LOG_I("System Version:%s,local_address:%ld\r\n",MCU_VER,local_address);
 
     rf_en_mq = rt_mq_create("rf_en_mq", 260, 5, RT_IPC_FLAG_PRIO);
     rf_encode_t = rt_thread_create("radio_send", rf_encode_entry, RT_NULL, 1024, 9, 10);
