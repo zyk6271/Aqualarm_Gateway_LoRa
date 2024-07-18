@@ -102,6 +102,35 @@ void key_on_off_long_click_handle(void)
     }
 }
 
+uint8_t factory_button_detect(void)
+{
+    rt_pin_mode(KEY_ON_PIN, PIN_MODE_INPUT);
+    rt_pin_mode(KEY_OFF_PIN, PIN_MODE_INPUT);
+    if(rt_pin_read(KEY_ON_PIN) == 0 && rt_pin_read(KEY_OFF_PIN) == 0)
+    {
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+void factory_key_callback(void *parameter)
+{
+    led_beep_kick();
+}
+
+void factory_button_init(void)
+{
+    key_on_btn = agile_btn_create(KEY_ON_PIN, PIN_LOW, PIN_MODE_INPUT);
+    key_off_btn = agile_btn_create(KEY_OFF_PIN, PIN_LOW, PIN_MODE_INPUT);
+    agile_btn_set_event_cb(key_on_btn, BTN_PRESS_DOWN_EVENT, factory_key_callback);
+    agile_btn_set_event_cb(key_off_btn, BTN_PRESS_DOWN_EVENT, factory_key_callback);
+    agile_btn_start(key_on_btn);
+    agile_btn_start(key_off_btn);
+}
+
 void button_init(void)
 {
     key_on_btn = agile_btn_create(KEY_ON_PIN, PIN_LOW, PIN_MODE_INPUT);

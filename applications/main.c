@@ -18,6 +18,7 @@ int main(void)
 {
     storage_init();
     led_init();
+    factory_detect();
     button_init();
     radio_init();
     heart_init();

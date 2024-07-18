@@ -524,8 +524,6 @@ void radio_mainunit_ota_send(uint32_t device_addr,uint8_t *firmware,uint8_t leng
     tx_frame.tx_data = firmware;
     tx_frame.tx_len = length;
     radio_mainunit_command_send(&tx_frame);
-
-    LOG_I("radio_mainunit_ota_send now tick is %d",rt_tick_get());
 }
 
 void radio_mainunit_command_send(tx_format *tx_frame)

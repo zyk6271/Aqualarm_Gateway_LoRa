@@ -95,7 +95,7 @@ void wifi_test(void)
 
 void wifi_test_callback(void *parameter)
 {
-    //factory_refresh();
+    factory_refresh();
 }
 
 void wifi_service_init(void)

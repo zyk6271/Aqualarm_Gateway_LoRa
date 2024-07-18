@@ -93,7 +93,7 @@
 /** @defgroup AGILE_LED_Private_Variables Agile Led Private Variables
  * @{
  */
-rt_align(RT_ALIGN_SIZE)
+ALIGN(RT_ALIGN_SIZE)
 static rt_slist_t _slist_head = RT_SLIST_OBJECT_INIT(_slist_head); /**< Agile Led 链表头节点 */
 static struct rt_mutex _mtx;                                       /**< Agile Led 互斥锁 */
 static uint8_t _is_init = 0;                                       /**< Agile Led 初始化完成标志 */

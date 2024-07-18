@@ -9,6 +9,7 @@ static agile_led_t *led_obj_rf_red = RT_NULL;
 static agile_led_t *led_obj_wifi_red = RT_NULL;
 static agile_led_t *led_obj_wifi_blue = RT_NULL;
 static agile_led_t *led_obj_beep = RT_NULL;
+static agile_led_t *led_obj_beep_kick = RT_NULL;
 
 #define DBG_TAG "LED"
 #define DBG_LVL DBG_LOG
@@ -21,6 +22,7 @@ void led_init(void)
     led_obj_wifi_red = agile_led_create(LED3_PIN, PIN_LOW, "200,200", -1);
     led_obj_wifi_blue = agile_led_create(LED4_PIN, PIN_LOW, "200,200", -1);
     led_obj_beep = agile_led_create(BUZZER_PIN, PIN_HIGH, "200,200", -1);
+    led_obj_beep_kick = agile_led_create(BUZZER_PIN, PIN_HIGH, "100,100", 1);
 
     agile_led_set_light_mode(led_obj_beep, "500,1", 1);
     agile_led_start(led_obj_beep);
@@ -38,6 +40,11 @@ void led_beep_power(uint8_t count)
     agile_led_stop(led_obj_beep);
     agile_led_set_light_mode(led_obj_beep, "400,400", count);
     agile_led_start(led_obj_beep);
+}
+
+void led_beep_kick(void)
+{
+    agile_led_start(led_obj_beep_kick);
 }
 
 void wifi_led(uint8_t type)
@@ -192,8 +199,10 @@ void beep_led_test(void)
     agile_led_set_light_mode(led_obj_rf_green, "600,600,600,600", 1);
     agile_led_set_light_mode(led_obj_wifi_red, "0,600,1200,600", 1);
     agile_led_set_light_mode(led_obj_wifi_blue, "600,600,600,600", 1);
+    agile_led_set_light_mode(led_obj_beep, "200,400", 4);
     agile_led_start(led_obj_rf_red);
     agile_led_start(led_obj_rf_green);
     agile_led_start(led_obj_wifi_red);
     agile_led_start(led_obj_wifi_blue);
+    agile_led_start(led_obj_beep);
 }

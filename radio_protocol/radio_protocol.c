@@ -60,6 +60,9 @@ void radio_protocol_parse(int rssi,int snr,uint8_t* data,size_t len)
     case DEVICE_TYPE_ALLINONE:
         radio_frame_mainunit_parse(&rx_frame);
         break;
+    case DEVICE_TYPE_GATEWAY:
+        radio_frame_factory_parse(&rx_frame);
+        break;
     default:
         break;
     }

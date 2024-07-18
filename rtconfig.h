@@ -6,7 +6,6 @@
 /* RT-Thread Kernel */
 
 #define RT_NAME_MAX 8
-#define RT_CPUS_NR 1
 #define RT_ALIGN_SIZE 4
 #define RT_THREAD_PRIORITY_32
 #define RT_THREAD_PRIORITY_MAX 32
@@ -24,9 +23,8 @@
 /* kservice optimization */
 
 /* end of kservice optimization */
-#define RT_USING_DEBUG
-#define RT_DEBUGING_COLOR
-#define RT_DEBUGING_CONTEXT
+#define RT_DEBUG
+#define RT_DEBUG_COLOR
 
 /* Inter-Thread communication */
 
@@ -44,16 +42,18 @@
 #define RT_USING_SMALL_MEM_AS_HEAP
 #define RT_USING_HEAP
 /* end of Memory Management */
+
+/* Kernel Device Object */
+
 #define RT_USING_DEVICE
 #define RT_USING_CONSOLE
 #define RT_CONSOLEBUF_SIZE 256
 #define RT_CONSOLE_DEVICE_NAME "uart2"
-#define RT_VER_NUM 0x50100
-#define RT_BACKTRACE_LEVEL_MAX_NR 32
+/* end of Kernel Device Object */
+#define RT_VER_NUM 0x40101
 /* end of RT-Thread Kernel */
-#define RT_USING_HW_ATOMIC
-#define RT_USING_CPU_FFS
 #define ARCH_ARM
+#define RT_USING_CPU_FFS
 #define ARCH_ARM_CORTEX_M
 #define ARCH_ARM_CORTEX_M4
 
@@ -76,14 +76,8 @@
 #define MSH_USING_BUILT_IN_COMMANDS
 #define FINSH_USING_DESCRIPTION
 #define FINSH_ARG_MAX 10
-#define FINSH_USING_OPTION_COMPLETION
-
-/* DFS: device virtual file system */
-
-/* end of DFS: device virtual file system */
 #define RT_USING_FAL
-#define FAL_DEBUG_CONFIG
-#define FAL_DEBUG 1
+#define FAL_DEBUG 0
 #define FAL_PART_HAS_TABLE_CFG
 #define FAL_USING_SFUD_PORT
 #define FAL_USING_NOR_FLASH_DEV_NAME "norflash0"
@@ -91,16 +85,15 @@
 /* Device Drivers */
 
 #define RT_USING_DEVICE_IPC
-#define RT_UNAMED_PIPE_NUMBER 64
 #define RT_USING_SERIAL
 #define RT_USING_SERIAL_V1
 #define RT_SERIAL_RB_BUFSZ 64
+#define RT_USING_PIN
 #define RT_USING_SPI
 #define RT_USING_SFUD
 #define RT_SFUD_USING_SFDP
 #define RT_SFUD_SPI_MAX_HZ 50000000
 #define RT_USING_WDT
-#define RT_USING_PIN
 
 /* Using USB */
 
@@ -109,16 +102,7 @@
 
 /* C/C++ and POSIX layer */
 
-/* ISO-ANSI C layer */
-
-/* Timezone and Daylight Saving Time */
-
-#define RT_LIBC_USING_LIGHT_TZ_DST
-#define RT_LIBC_TZ_DEFAULT_HOUR 8
-#define RT_LIBC_TZ_DEFAULT_MIN 0
-#define RT_LIBC_TZ_DEFAULT_SEC 0
-/* end of Timezone and Daylight Saving Time */
-/* end of ISO-ANSI C layer */
+#define RT_LIBC_DEFAULT_TIMEZONE 8
 
 /* POSIX (Portable Operating System Interface) layer */
 
@@ -135,10 +119,6 @@
 /* Network */
 
 /* end of Network */
-
-/* Memory protection */
-
-/* end of Memory protection */
 
 /* Utilities */
 

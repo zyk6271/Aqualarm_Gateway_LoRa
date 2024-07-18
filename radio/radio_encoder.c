@@ -11,6 +11,7 @@
 #include <rtdevice.h>
 #include <stdio.h>
 #include "radio_encoder.h"
+#include "protocol.h"
 #include "radio_app.h"
 
 #define DBG_TAG "RADIO_ENCODER"
@@ -24,7 +25,6 @@ static struct rt_completion rf_txdone_sem;
 uint32_t local_address = 0;
 
 #define MAX_LBT_RETRY_TIMES     3
-#define MAX_ACK_RETRY_TIMES     2
 
 struct send_msg
 {
@@ -105,13 +105,13 @@ void rf_encode_entry(void *paramaeter)
 void RadioQueue_Init(void)
 {
     int *p;
-    p=(int *)(0x0803FFF0);//这就是已知的地址，要强制类型转换
+    p=(int *)(0x0800BFF0);//这就是已知的地址，要强制类型转换
     local_address = *p;//从Flash加载ID
     if (local_address == 0xFFFFFFFF || local_address == 0)
     {
         local_address = 40000000;
     }
-    LOG_I("local_address is %d\r\n", local_address);
+    LOG_I("System Version:%s,local_address:%ld,\r\n",MCU_VER,local_address);
 
     rf_en_mq = rt_mq_create("rf_en_mq", 260, 5, RT_IPC_FLAG_PRIO);
     rf_encode_t = rt_thread_create("radio_send", rf_encode_entry, RT_NULL, 1024, 9, 10);
