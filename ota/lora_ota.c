@@ -13,6 +13,7 @@
 #include <finsh.h>
 #include <fal.h>
 
+#include "wifi.h"
 #include "radio_protocol.h"
 #include "radio_protocol_mainunit.h"
 
@@ -20,7 +21,10 @@
 #define DBG_LVL DBG_LOG
 #include <rtdbg.h>
 
+rt_timer_t lora_ota_resp_timer = RT_NULL;
+
 uint32_t total_size = 0;
+
 void lora_ota_begin(rt_uint32_t sub_addr,uint32_t firm_size)
 {
     total_size = firm_size;
@@ -38,6 +42,23 @@ void lora_ota_end(rt_uint32_t sub_addr)
 {
     LOG_I("lora_ota_end send to %d",sub_addr);
     radio_mainunit_lora_ota_end(sub_addr);
+}
+
+void lora_ota_response(void)
+{
+    wifi_uart_write_frame(SUBDEV_TRANS_CMD, MCU_TX_VER, 0);
+    stop_update_flag = DISABLE;
+    rt_timer_stop(lora_ota_resp_timer);
+}
+
+void lora_ota_resp_timer_callback(void *parameter)
+{
+    stop_update_flag = DISABLE;
+}
+
+void lora_ota_timer_init(void)
+{
+    lora_ota_resp_timer = rt_timer_create("ota_timeout", lora_ota_resp_timer_callback, RT_NULL, 10000, RT_TIMER_FLAG_SOFT_TIMER | RT_TIMER_FLAG_ONE_SHOT);
 }
 
 void radio_mainunit_lora_ota_begin(uint32_t device_addr,uint32_t firm_size)
@@ -84,6 +105,7 @@ void radio_mainunit_lora_ota_receive(rt_uint32_t device_addr,rt_uint8_t *buf, rt
     tx_frame.tx_len = 6 + len;
 
     radio_mainunit_command_send(&tx_frame);
+    rt_timer_start(lora_ota_resp_timer);
 }
 
 void radio_mainunit_lora_ota_end(uint32_t device_addr)
@@ -102,4 +124,5 @@ void radio_mainunit_lora_ota_end(uint32_t device_addr)
     tx_frame.tx_len = 1;
 
     radio_mainunit_command_send(&tx_frame);
+    rt_timer_start(lora_ota_resp_timer);
 }

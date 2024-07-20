@@ -705,12 +705,9 @@ void data_handle(unsigned short offset)
                     firm_update_flag = 0;
                     ret = ERROR;
                 }
-                
 //                if(ret == SUCCESS) {
 //                    wifi_uart_write_frame(SUBDEV_TRANS_CMD, MCU_TX_VER, 0);
 //                }
-                //恢复一切数据上报
-                stop_update_flag = DISABLE;    
             }
         break;
           

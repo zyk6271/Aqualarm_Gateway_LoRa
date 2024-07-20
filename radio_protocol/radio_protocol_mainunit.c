@@ -374,15 +374,12 @@ static void radio_frame_mainunit_parse_ota(rx_format *rx_frame)
     case 1:
         length = set_wifi_uart_byte(length,SUB_PACKAGE_SIZE);
         wifi_uart_write_frame(SUBDEV_START_UPGRADE_CMD, MCU_TX_VER, length);
-        LOG_I("radio_frame_mainunit_parse_ota cmd 1");
         break;
     case 2:
-        wifi_uart_write_frame(SUBDEV_TRANS_CMD, MCU_TX_VER, 0);
-        LOG_I("radio_frame_mainunit_parse_ota cmd 2");
+        lora_ota_response();
         break;
     case 3:
-        wifi_uart_write_frame(SUBDEV_TRANS_CMD, MCU_TX_VER, 0);
-        LOG_I("radio_frame_mainunit_parse_ota cmd 3");
+        lora_ota_response();
         break;
     }
 }

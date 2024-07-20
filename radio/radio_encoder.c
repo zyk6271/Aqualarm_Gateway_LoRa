@@ -28,7 +28,7 @@ uint32_t local_address = 0;
 
 struct send_msg
 {
-    char *data_ptr;    /* 数据块首地址 */
+    char    data_ptr[253];   /* 数据块首地址 */
     uint8_t data_size;   /* 数据块大小   */
     uint8_t parameter;   /* 数据块大小   */
 };
@@ -41,7 +41,7 @@ uint32_t get_local_address(void)
 void lora_tx_enqueue(char *data,uint8_t length,uint8_t parameter)
 {
     struct send_msg msg_ptr;
-    msg_ptr.data_ptr = data;  /* 指向相应的数据块地址 */
+    rt_memcpy(&msg_ptr.data_ptr,data,length < 253 ? length : 253);
     msg_ptr.data_size = length; /* 数据块的长度 */
     msg_ptr.parameter = parameter; /* 数据块的长度 */
 
@@ -113,7 +113,7 @@ void RadioQueue_Init(void)
     }
     LOG_I("System Version:%s,local_address:%ld\r\n",MCU_VER,local_address);
 
-    rf_en_mq = rt_mq_create("rf_en_mq", 260, 5, RT_IPC_FLAG_PRIO);
+    rf_en_mq = rt_mq_create("rf_en_mq", sizeof(struct send_msg), 5, RT_IPC_FLAG_PRIO);
     rf_encode_t = rt_thread_create("radio_send", rf_encode_entry, RT_NULL, 1024, 9, 10);
     if (rf_encode_t)rt_thread_startup(rf_encode_t);
 }

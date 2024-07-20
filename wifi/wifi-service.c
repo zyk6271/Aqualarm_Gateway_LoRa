@@ -100,6 +100,7 @@ void wifi_test_callback(void *parameter)
 
 void wifi_service_init(void)
 {
+    lora_ota_timer_init();
     wifi_factory_rst_timer = rt_timer_create("wifi_factory_rst_timer", wifi_factory_rst_timer_callback, RT_NULL, 3000, RT_TIMER_FLAG_SOFT_TIMER|RT_TIMER_FLAG_PERIODIC);
     wifi_network_rst_timer = rt_timer_create("wifi_network_rst_timer", wifi_network_rst_timer_callback, RT_NULL, 2000, RT_TIMER_FLAG_SOFT_TIMER|RT_TIMER_FLAG_PERIODIC);
     wifi_test_timer = rt_timer_create("wifi_test_timer", wifi_test_callback, RT_NULL, 5000, RT_TIMER_FLAG_SOFT_TIMER|RT_TIMER_FLAG_PERIODIC);
