@@ -28,7 +28,6 @@ void aqualarm_device_heart_check(void)
             if(device->heart)
             {
                 device->heart = 0;
-                LOG_D("aq_device is keep online %d\r\n",device->device_id);
             }
             else
             {
@@ -52,25 +51,22 @@ void device_sync_start(void)
 void sync_timer_callback(void)
 {
     aqualarm_device_t *device = RT_NULL;
-    while(sync_node != RT_NULL)
+    while (sync_node != RT_NULL)
     {
         device = rt_slist_entry(sync_node, aqualarm_device_t, slist);
-        if(device->type == DEVICE_TYPE_MAINUNIT || device->type == DEVICE_TYPE_ALLINONE)
+        if (device->type == DEVICE_TYPE_MAINUNIT || device->type == DEVICE_TYPE_ALLINONE)
         {
             radio_mainunit_request_sync(device->device_id);
-            LOG_I("radio_mainunit_request_sync %d\r\n",device->device_id);
+            LOG_I("radio_mainunit_request_sync %d\r\n", device->device_id);
             sync_node = rt_slist_next(sync_node);
-            if(sync_node != RT_NULL)
-            {
-                rt_timer_start(sync_timer);
-            }
-            break;
+            break; // Found a matching device, no need to continue the loop
         }
-        else
-        {
-            sync_node = rt_slist_next(sync_node);
-            continue;
-        }
+        sync_node = rt_slist_next(sync_node);
+    }
+
+    if (sync_node != RT_NULL)
+    {
+        rt_timer_start(sync_timer); // Restart timer if we found a device
     }
 }
 

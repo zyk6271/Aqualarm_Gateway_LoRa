@@ -26,13 +26,6 @@ uint32_t local_address = 0;
 
 #define MAX_LBT_RETRY_TIMES     3
 
-struct send_msg
-{
-    char    data_ptr[253];   /* 数据块首地址 */
-    uint8_t data_size;   /* 数据块大小   */
-    uint8_t parameter;   /* 数据块大小   */
-};
-
 uint32_t get_local_address(void)
 {
     return local_address;
@@ -40,11 +33,10 @@ uint32_t get_local_address(void)
 
 void lora_tx_enqueue(char *data,uint8_t length,uint8_t parameter)
 {
-    struct send_msg msg_ptr;
+    struct send_msg msg_ptr = {0};
     rt_memcpy(&msg_ptr.data_ptr,data,length < 253 ? length : 253);
     msg_ptr.data_size = length; /* 数据块的长度 */
     msg_ptr.parameter = parameter; /* 数据块的长度 */
-
     rt_mq_send(rf_en_mq, (void*)&msg_ptr, sizeof(struct send_msg));
 }
 
@@ -66,20 +58,21 @@ rt_err_t rf_send_with_lbt(uint8_t freq_type,char* data_ptr,uint8_t data_size)
         else
         {
             LOG_E("CSMA check retry at start %d",retry_times);
-            rt_thread_mdelay(200);
+            rt_thread_mdelay(400);
         }
     }
 
     if (retry_times >= MAX_LBT_RETRY_TIMES)
     {
        LOG_E("send fail because channel busy\n");
+       radio_recv_start();
        return RT_ERROR;
     }
     else
     {
         rt_completion_init(&rf_txdone_sem);
         RF_Send(data_ptr, data_size);
-        if(rt_completion_wait(&rf_txdone_sem, 500) == RT_EOK)
+        if(rt_completion_wait(&rf_txdone_sem, 1000) == RT_EOK)
         {
             LOG_D("rf_send_with_lbt send packet success");
             return RT_EOK;
@@ -115,6 +108,6 @@ void RadioQueue_Init(void)
 
     rf_en_mq = rt_mq_create("rf_en_mq", sizeof(struct send_msg), 5, RT_IPC_FLAG_PRIO);
     rf_encode_t = rt_thread_create("radio_send", rf_encode_entry, RT_NULL, 1024, 9, 10);
-    if (rf_encode_t)rt_thread_startup(rf_encode_t);
+    rt_thread_startup(rf_encode_t);
 }
 
