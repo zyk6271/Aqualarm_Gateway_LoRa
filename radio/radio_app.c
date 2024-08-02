@@ -58,6 +58,18 @@ static void OnTxTimeout(void)
     radio_recv_start();
 }
 
+static void OnRxError(void)
+{
+    LOG_W("OnRxError\r\n");
+    radio_recv_start();
+}
+
+static void OnRxTimeout(void)
+{
+    LOG_W("OnRxTimeout\r\n");
+    radio_recv_start();
+}
+
 static void OnCadDone(bool channelActivityDetected)
 {
     LOG_D("OnCadDone channelActivityDetected (%d)\r\n",channelActivityDetected);
@@ -73,6 +85,8 @@ void radio_init(void)
     RadioEvents.TxDone = OnTxDone;
     RadioEvents.RxDone = OnRxDone;
     RadioEvents.TxTimeout = OnTxTimeout;
+    RadioEvents.RxTimeout = OnRxTimeout;
+    RadioEvents.RxError = OnRxError;
     RadioEvents.CadDone = OnCadDone;
 
     Radio.Init(&RadioEvents);

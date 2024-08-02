@@ -437,15 +437,18 @@ void radio_mainunit_request_learn(void)
 
 void radio_mainunit_request_sync(uint32_t device_addr)
 {
-    uint32_t send_value = 0;
+    uint8_t send_buf[4] = {0};
+    send_buf[0] = 0;//sync request
+    send_buf[1] = aq_device_bind_count(device_addr);
+
     tx_format tx_frame = {0};
     tx_frame.msg_ack = RT_TRUE;
     tx_frame.msg_type = MSG_CONFIRMED_DOWNLINK;
     tx_frame.dest_addr = device_addr;
     tx_frame.source_addr = get_local_address();
     tx_frame.command = DEVICE_SYNC_CMD;
-    tx_frame.tx_data = &send_value;
-    tx_frame.tx_len = 1;
+    tx_frame.tx_data = send_buf;
+    tx_frame.tx_len = 2;
     radio_mainunit_command_send(&tx_frame);
 }
 

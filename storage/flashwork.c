@@ -320,6 +320,23 @@ void aq_device_version_set(uint32_t device_id,uint8_t main_ver,uint8_t sub_ver)
     }
 }
 
+uint8_t aq_device_bind_count(uint32_t bind_id)
+{
+    rt_slist_t *node;
+    uint8_t count = 0;
+    aqualarm_device_t *device = RT_NULL;
+    rt_slist_for_each(node, &_device_list)
+    {
+        device = rt_slist_entry(node, aqualarm_device_t, slist);
+        if(device->bind_id == bind_id)
+        {
+            count ++;
+        }
+    }
+
+    return count;
+}
+
 void aq_device_online_set(uint32_t device_id,uint8_t state)
 {
     rt_slist_t *node;
