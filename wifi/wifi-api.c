@@ -39,7 +39,6 @@ void wifi_mainunit_clear_warning(uint32_t device_id)
     unsigned char *from_id_buf = rt_malloc(16);
     rt_sprintf(from_id_buf,"%ld",device_id);
     mcu_dp_bool_update(MAINUNIT_DPID_DEVICE_ALARM,0,from_id_buf,my_strlen(from_id_buf)); //BOOL型数据上报;
-    mcu_dp_bool_update(MAINUNIT_DPID_DELAY_STATE,0,from_id_buf,my_strlen(from_id_buf)); //VALUE型数据上报;
     rt_free(from_id_buf);
 }
 
@@ -143,7 +142,6 @@ void wifi_mainunit_valve_upload(uint32_t device_id,uint8_t state)
         mcu_dp_bool_update(MAINUNIT_DPID_DELAY_STATE,0,addr_buf,my_strlen(addr_buf)); //VALUE型数据上报;
     }
     mcu_dp_bool_update(MAINUNIT_DPID_DEVICE_STATE,state,addr_buf,my_strlen(addr_buf));
-    mcu_dp_bool_update(MAINUNIT_DPID_DELAY_STATE,0,addr_buf,my_strlen(addr_buf)); //VALUE型数据上报;
     aq_device_valve_set(device_id,state);
     rt_free(addr_buf);
 }

@@ -35,13 +35,6 @@ void led_beep_start(uint8_t count)
     agile_led_start(led_obj_beep);
 }
 
-void led_beep_power(uint8_t count)
-{
-    agile_led_stop(led_obj_beep);
-    agile_led_set_light_mode(led_obj_beep, "400,400", count);
-    agile_led_start(led_obj_beep);
-}
-
 void led_beep_kick(void)
 {
     agile_led_start(led_obj_beep_kick);

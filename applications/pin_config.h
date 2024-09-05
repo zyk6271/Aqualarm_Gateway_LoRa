@@ -21,8 +21,8 @@
 #define KEY_OFF_PIN                     5
 #define LED1_PIN                        15
 #define LED2_PIN                        45
-#define LED3_PIN                        0
-#define LED4_PIN                        24
+#define LED3_PIN                        24
+#define LED4_PIN                        0
 #define BUZZER_PIN                      23
 
 //WIFI
