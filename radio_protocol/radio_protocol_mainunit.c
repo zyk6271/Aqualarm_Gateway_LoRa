@@ -386,7 +386,7 @@ static void radio_frame_mainunit_parse_ota(rx_format *rx_frame)
 
 void radio_frame_mainunit_parse(rx_format *rx_frame)
 {
-    if(rx_frame->rx_data[0] == LEARN_DEVICE_CMD)//learn device ignore address check
+    if((rx_frame->rx_data[0] == LEARN_DEVICE_CMD) && (rx_frame->dest_addr == get_local_address()))//learn device ignore source address check
     {
         radio_frame_mainunit_parse_learn(rx_frame);
     }
