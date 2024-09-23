@@ -92,6 +92,13 @@ static void radio_frame_mainunit_parse_heart(rx_format *rx_frame)
         wifi_doorunit_bat_upload(slaver_addr,sub_bat);
         wifi_device_heart_upload(slaver_addr,1);
         break;
+    case 3://motion sensor heart
+        slaver_addr = rx_frame->rx_data[3]<<24 | rx_frame->rx_data[4]<<16 | rx_frame->rx_data[5]<<8 | rx_frame->rx_data[6];
+        sub_rssi = rx_frame->rx_data[7];
+        wifi_device_heart_upload(slaver_addr,1);
+        wifi_motion_sensor_rssi_upload(slaver_addr,sub_rssi);
+        wifi_motion_sensor_config_upload(slaver_addr,rx_frame->rx_data[8],rx_frame->rx_data[9],rx_frame->rx_data[10]);
+        break;
     default:
         break;
     }
@@ -312,6 +319,16 @@ static void radio_frame_mainunit_parse_control(rx_format *rx_frame)
         wifi_device_heart_upload(slaver_addr,1);
         wifi_device_rssi_upload(slaver_addr,sub_rssi);
         wifi_doorunit_delay_upload(slaver_addr,sub_value);
+        break;
+    case 4://motion sensor control
+        slaver_addr = rx_frame->rx_data[3]<<24 | rx_frame->rx_data[4]<<16 | rx_frame->rx_data[5]<<8 | rx_frame->rx_data[6];
+        sub_value = rx_frame->rx_data[7];
+        sub_rssi = rx_frame->rx_data[8];
+        wifi_device_heart_upload(slaver_addr,1);
+        wifi_device_rssi_upload(slaver_addr,sub_rssi);
+        wifi_motion_sensor_control_upload(slaver_addr,sub_value);
+        wifi_mainunit_valve_upload(rx_frame->source_addr,sub_value);//主控开关阀
+        wifi_motion_sensor_config_upload(slaver_addr,rx_frame->rx_data[9],rx_frame->rx_data[10],rx_frame->rx_data[11]);
         break;
     default:
         break;

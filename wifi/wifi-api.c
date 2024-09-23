@@ -22,12 +22,16 @@
 static char MAINUNIT_PRODUCT_PID[] = {"cbzww5ywtyczyaau"};
 static char ENDUNIT_PRODUCT_PID[] = {"lnbkva6cip8dw7vy"};
 static char DOOR_PRODUCT_PID[] = {"emnzq3qxwfplx7db"};
+static char MOTION_SENSOR_PRODUCT_PID[] = {"bktwnsuttuplfweh"};
 
 #define REMOTE_MAX_DEVICE   32
 
 uint8_t remote_sync_ready = 0;
 uint32_t remote_device_list[REMOTE_MAX_DEVICE] = {0};
 
+/******************************************************************************
+                              Gateway DPID API
+******************************************************************************/
 void wifi_gateway_addr_upload(uint32_t gateway_id)
 {
     uint8_t addr_buf[]={"0000"};
@@ -41,7 +45,9 @@ void wifi_mainunit_clear_warning(uint32_t device_id)
     mcu_dp_bool_update(MAINUNIT_DPID_DEVICE_ALARM,0,from_id_buf,my_strlen(from_id_buf)); //BOOL型数据上报;
     rt_free(from_id_buf);
 }
-
+/******************************************************************************
+                              MainUnit DPID API
+******************************************************************************/
 void wifi_mainunit_reset_warning(uint32_t device_id)
 {
     unsigned char *from_id_buf = rt_malloc(16);
@@ -205,6 +211,83 @@ void wifi_mainunit_rssi_upload(uint32_t device_id,int rssi)
     rt_free(addr_buf);
 }
 
+/******************************************************************************
+                              Motion Sensor DPID API
+******************************************************************************/
+
+void wifi_motion_sensor_add_device(uint32_t device_id)
+{
+    char *addr_buf = rt_malloc(16);
+    rt_sprintf(addr_buf,"%ld",device_id);
+    local_add_subdev_limit(1,0,0x01);
+    gateway_subdevice_add("1.0",MOTION_SENSOR_PRODUCT_PID,0,addr_buf,10,0);
+    rt_free(addr_buf);
+}
+
+void wifi_motion_sensor_info_upload(uint32_t device_id,uint32_t from_id)
+{
+    aqualarm_device_t *device = aq_device_find(device_id);
+    if(device == RT_NULL)
+    {
+        return;
+    }
+
+    char *addr_buf = rt_malloc(16);
+    rt_sprintf(addr_buf,"%ld",device_id);
+    mcu_dp_value_update(MOTION_SENSOR_DPID_BIND_ID,from_id,addr_buf,my_strlen(addr_buf)); //BOOL型数据上报;
+    mcu_dp_enum_update(MOTION_SENSOR_DPID_RSSI,device->rssi,addr_buf,my_strlen(addr_buf)); //VALUE型数据上报;
+    rt_free(addr_buf);
+}
+
+void wifi_motion_sensor_config_upload(uint32_t device_id,uint8_t range_time_level,uint8_t delay_time_level,uint8_t human_detected)
+{
+    aqualarm_device_t *device = aq_device_find(device_id);
+    if(device == RT_NULL)
+    {
+        return;
+    }
+
+    char *addr_buf = rt_malloc(16);
+    rt_sprintf(addr_buf,"%ld",device_id);
+    mcu_dp_value_update(MOTION_SENSOR_DPID_DELAY_TIME_LEVEL,range_time_level,addr_buf,my_strlen(addr_buf)); //BOOL型数据上报;
+    mcu_dp_value_update(MOTION_SENSOR_DPID_DETECT_RANGE_LEVEL,delay_time_level,addr_buf,my_strlen(addr_buf)); //BOOL型数据上报;
+    mcu_dp_enum_update(MOTION_SENSOR_DPID_PIR_STATE,human_detected,addr_buf,my_strlen(addr_buf));
+    rt_free(addr_buf);
+}
+
+void wifi_motion_sensor_control_upload(uint32_t device_id,uint8_t state)
+{
+    aqualarm_device_t *device = aq_device_find(device_id);
+    if(device == RT_NULL)
+    {
+        return;
+    }
+
+    char *addr_buf = rt_malloc(16);
+    rt_sprintf(addr_buf,"%ld",device_id);
+    mcu_dp_bool_update(MOTION_SENSOR_DPID_CONTROL_STATE,state,addr_buf,my_strlen(addr_buf));
+    rt_free(addr_buf);
+}
+
+void wifi_motion_sensor_rssi_upload(uint32_t device_id,uint8_t rssi)
+{
+    aqualarm_device_t *device = aq_device_find(device_id);
+    if(device == RT_NULL)
+    {
+        return;
+    }
+
+    device->rssi = rssi;
+
+    char *addr_buf = rt_malloc(16);
+    rt_sprintf(addr_buf,"%ld",device_id);
+    mcu_dp_enum_update(MOTION_SENSOR_DPID_RSSI,rssi,addr_buf,my_strlen(addr_buf));
+    rt_free(addr_buf);
+}
+
+/******************************************************************************
+                              EndUnit DPID API
+******************************************************************************/
 void wifi_endunit_add_device(uint32_t device_id)
 {
     char *addr_buf = rt_malloc(16);
@@ -317,7 +400,9 @@ void wifi_endunit_bat_upload(uint32_t device_id,uint8_t bat_level)
     mcu_dp_enum_update(ENDUNIT_DPID_BATTERY_STATES,bat_level,addr_buf,my_strlen(addr_buf));
     rt_free(addr_buf);
 }
-
+/******************************************************************************
+                              DoorUnit DPID API
+******************************************************************************/
 void wifi_doorunit_add_device(uint32_t device_id)
 {
     char *addr_buf = rt_malloc(16);
@@ -394,6 +479,7 @@ void wifi_doorunit_rssi_upload(uint32_t device_id,uint8_t rssi)
     {
         return;
     }
+
     device->rssi = rssi;
     char *addr_buf = rt_malloc(16);
     rt_sprintf(addr_buf,"%ld",device_id);
@@ -415,7 +501,9 @@ void wifi_doorunit_bat_upload(uint32_t device_id,uint8_t bat_level)
     mcu_dp_enum_update(DOORUNIT_DPID_BATTERY,bat_level,addr_buf,my_strlen(addr_buf));
     rt_free(addr_buf);
 }
-
+/******************************************************************************
+                          Abstraction Layer API
+******************************************************************************/
 void wifi_device_rssi_upload(uint32_t device_id,uint8_t rssi)
 {
     aqualarm_device_t *device = aq_device_find(device_id);
@@ -435,6 +523,9 @@ void wifi_device_rssi_upload(uint32_t device_id,uint8_t rssi)
         break;
     case DEVICE_TYPE_DOORUNIT:
         wifi_doorunit_rssi_upload(device_id,rssi);
+        break;
+    case DEVICE_TYPE_MOTION_SENSOR:
+        wifi_motion_sensor_rssi_upload(device_id,rssi);
         break;
     default:
         break;
@@ -459,6 +550,8 @@ void wifi_device_bat_upload(uint32_t device_id,uint8_t bat_level)
         break;
     case DEVICE_TYPE_DOORUNIT:
         wifi_doorunit_bat_upload(device_id,bat_level);
+        break;
+    case DEVICE_TYPE_MOTION_SENSOR:
         break;
     default:
         break;
@@ -551,6 +644,9 @@ void wifi_device_add(uint32_t device_id)
     case DEVICE_TYPE_DOORUNIT:
         wifi_doorunit_add_device(device_id);
         break;
+    case DEVICE_TYPE_MOTION_SENSOR:
+        wifi_motion_sensor_add_device(device_id);
+        break;
     default:
         break;
     }
@@ -598,6 +694,9 @@ void wifi_device_info_upload(uint32_t device_id)
     case DEVICE_TYPE_DOORUNIT:
         wifi_doorunit_info_upload(device_id,device->bind_id);
         break;
+    case DEVICE_TYPE_MOTION_SENSOR:
+        wifi_motion_sensor_info_upload(device_id,device->bind_id);
+        break;
     default:
         break;
     }
@@ -640,7 +739,7 @@ void wifi_heart_reponse(char *addr_buf)//called by wifi module
         wifi_device_info_upload(device->device_id);
     }
 
-    if(device->type == DEVICE_TYPE_DOORUNIT || device->type == DEVICE_TYPE_ENDUNIT)
+    if(device->type == DEVICE_TYPE_DOORUNIT || device->type == DEVICE_TYPE_ENDUNIT || device->type == DEVICE_TYPE_MOTION_SENSOR)
     {
         if(aq_device_online_get(device->bind_id) == 1 && aq_device_online_get(device->device_id) == 1)
         {

@@ -28,7 +28,7 @@
 ******************************************************************************/
 #define GW_PRODUCT_PID "19tgfa05ptvrapap"    //开发平台创建产品后生成的16位字符产品唯一标识
 
-#define MCU_VER "1.0.4"                                 //用户的软件版本,用于MCU固件升级,MCU升级版本需修改
+#define MCU_VER "1.0.5"                                 //用户的软件版本,用于MCU固件升级,MCU升级版本需修改
 
 //配网方式选择,默认为CONFIG_MODE_DEFAULT,只能三选一
 #define CONFIG_MODE     CONFIG_MODE_DEFAULT             //默认配网方式
@@ -348,6 +348,30 @@ mcu在wifi模块正确联网后可调用 get_green_time_with_zone() 函数发起
 ******************************************************************************/
 //#define         HEART_QUERY_MANAGE_ENABLE         //开启心跳查询管理功能
 
+/******************************************************************************
+                                MOTION SENSOR DPID
+******************************************************************************/
+//人体感应状态(只上报)
+//备注:
+#define MOTION_SENSOR_DPID_PIR_STATE 12
+//信号强度(只上报)
+//备注:low信号低
+//mid信号中
+//high信号高
+//
+#define MOTION_SENSOR_DPID_RSSI 101
+//延迟时间挡位(只上报)
+//备注:
+#define MOTION_SENSOR_DPID_DELAY_TIME_LEVEL 102
+//探测距离挡位(只上报)
+//备注:
+#define MOTION_SENSOR_DPID_DETECT_RANGE_LEVEL 103
+//阀门控制(只上报)
+//备注:
+#define MOTION_SENSOR_DPID_CONTROL_STATE 104
+//绑定主控⁺ ID(只上报)
+//备注:
+#define MOTION_SENSOR_DPID_BIND_ID 107
 
 /******************************************************************************
                                 ENDUNIT DPID
