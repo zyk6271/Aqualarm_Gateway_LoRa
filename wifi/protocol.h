@@ -353,7 +353,7 @@ mcu在wifi模块正确联网后可调用 get_green_time_with_zone() 函数发起
 ******************************************************************************/
 //人体感应状态(只上报)
 //备注:
-#define MOTION_SENSOR_DPID_PIR_STATE 12
+#define MOTION_SENSOR_DPID_PIR_STATE 1
 //信号强度(只上报)
 //备注:low信号低
 //mid信号中
@@ -371,7 +371,7 @@ mcu在wifi模块正确联网后可调用 get_green_time_with_zone() 函数发起
 #define MOTION_SENSOR_DPID_CONTROL_STATE 104
 //绑定主控⁺ ID(只上报)
 //备注:
-#define MOTION_SENSOR_DPID_BIND_ID 107
+#define MOTION_SENSOR_DPID_BIND_ID 105
 
 /******************************************************************************
                                 ENDUNIT DPID

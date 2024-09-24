@@ -22,7 +22,7 @@
 static char MAINUNIT_PRODUCT_PID[] = {"cbzww5ywtyczyaau"};
 static char ENDUNIT_PRODUCT_PID[] = {"lnbkva6cip8dw7vy"};
 static char DOOR_PRODUCT_PID[] = {"emnzq3qxwfplx7db"};
-static char MOTION_SENSOR_PRODUCT_PID[] = {"bktwnsuttuplfweh"};
+static char MOTION_SENSOR_PRODUCT_PID[] = {"pgaj1kon8xp12ysz"};
 
 #define REMOTE_MAX_DEVICE   32
 
