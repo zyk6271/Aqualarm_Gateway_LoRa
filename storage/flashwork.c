@@ -23,6 +23,8 @@
 #define DBG_LVL DBG_LOG
 #include <rtdbg.h>
 
+#define MAX_MAIN_UNIT_DEVICE  3
+
 rt_spi_flash_device_t w25q16;
 
 uint32_t total_slot = 0;
@@ -116,6 +118,38 @@ void read_device_from_flash(void)
     }
 }
 
+uint8_t get_total_mainunit_slot(uint8_t now_type)
+{
+    uint8_t cnt = 0;
+    if(now_type == DEVICE_TYPE_MAINUNIT || now_type == DEVICE_TYPE_ALLINONE)
+    {
+        rt_slist_t *node;
+        aqualarm_device_t *device = RT_NULL;
+        rt_slist_for_each(node, &_device_list)
+        {
+            device = rt_slist_entry(node, aqualarm_device_t, slist);
+            if(device->type == DEVICE_TYPE_MAINUNIT || device->type == DEVICE_TYPE_ALLINONE)
+            {
+                cnt++;
+            }
+        }
+    }
+
+    return cnt;
+}
+
+uint8_t get_mainunit_learn_valid(void)
+{
+    if(get_total_mainunit_slot(DEVICE_TYPE_MAINUNIT) < 3)
+    {
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
+}
+
 int8_t get_free_device_slot(void)
 {
     uint32_t index = 0; // 记录当前位的索引
@@ -169,6 +203,11 @@ aqualarm_device_t *aq_device_create(uint8_t main_ver,uint8_t sub_ver,int rssi,ui
     {
         check_device->rssi = rssi;
         return check_device;
+    }
+
+    if(get_total_mainunit_slot(type) >=  MAX_MAIN_UNIT_DEVICE)
+    {
+        return RT_NULL;
     }
 
     int8_t slot = get_free_device_slot();

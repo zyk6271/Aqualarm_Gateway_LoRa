@@ -113,6 +113,7 @@ static void radio_frame_mainunit_parse_sync(rx_format *rx_frame)
     uint8_t sub_bat = 0;
     uint32_t slaver_addr = 0;
     tx_format tx_frame = {0};
+    aqualarm_device_t *device = RT_NULL;
 
     if((rx_frame->dest_addr != get_local_address()) || (aq_device_find(rx_frame->source_addr) == RT_NULL))
     {
@@ -136,10 +137,13 @@ static void radio_frame_mainunit_parse_sync(rx_format *rx_frame)
         slaver_addr = rx_frame->rx_data[3]<<24 | rx_frame->rx_data[4]<<16 | rx_frame->rx_data[5]<<8 | rx_frame->rx_data[6];
         sub_rssi = rx_frame->rx_data[7];
         sub_type = rx_frame->rx_data[8];
-        aq_device_create(0,0,sub_rssi,0,sub_type,slaver_addr,rx_frame->source_addr);
-        wifi_device_add(slaver_addr);
-        wifi_device_heart_upload(slaver_addr,1);
-        wifi_device_rssi_upload(slaver_addr,sub_rssi);
+        device = aq_device_create(0,0,sub_rssi,0,sub_type,slaver_addr,rx_frame->source_addr);
+        if(device != RT_NULL)
+        {
+            wifi_device_add(slaver_addr);
+            wifi_device_heart_upload(slaver_addr,1);
+            wifi_device_rssi_upload(slaver_addr,sub_rssi);
+        }
         break;
     case 1://del
         slaver_addr = rx_frame->rx_data[3]<<24 | rx_frame->rx_data[4]<<16 | rx_frame->rx_data[5]<<8 | rx_frame->rx_data[6];
@@ -164,11 +168,14 @@ static void radio_frame_mainunit_parse_sync(rx_format *rx_frame)
             sub_rssi = rx_frame->rx_data[(i * 8) + 12];
             sub_bat = rx_frame->rx_data[(i * 8) + 13];
 
-            aq_device_create(0,0,sub_rssi,sub_bat,sub_type,slaver_addr,rx_frame->source_addr);
-            wifi_device_add(slaver_addr);
-            wifi_device_heart_upload(slaver_addr,sub_alive);
-            wifi_device_rssi_upload(slaver_addr,sub_rssi);
-            wifi_device_bat_upload(slaver_addr,sub_bat);
+            device = aq_device_create(0,0,sub_rssi,sub_bat,sub_type,slaver_addr,rx_frame->source_addr);
+            if(device != RT_NULL)
+            {
+                wifi_device_add(slaver_addr);
+                wifi_device_heart_upload(slaver_addr,sub_alive);
+                wifi_device_rssi_upload(slaver_addr,sub_rssi);
+                wifi_device_bat_upload(slaver_addr,sub_bat);
+            }
         }
         break;
     default:
@@ -369,6 +376,11 @@ static void radio_frame_mainunit_parse_learn(rx_format *rx_frame)
                 wifi_device_add(rx_frame->source_addr);
                 beep_learn_success();
                 LOG_I("radio_frame_mainunit_parse_learn done %d\r\n",rx_frame->source_addr);
+            }
+            else
+            {
+                beep_learn_fail();
+                LOG_E("radio_frame_mainunit_parse_learn failed %d\r\n",rx_frame->source_addr);
             }
             break;
         default:

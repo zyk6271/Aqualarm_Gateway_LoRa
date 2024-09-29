@@ -42,7 +42,14 @@ void key_off_long_hold_handle(void)
         {
             if(key_off_count == 5)
             {
-                radio_mainunit_request_learn();
+                if(get_mainunit_learn_valid())
+                {
+                    radio_mainunit_request_learn();
+                }
+                else
+                {
+                    beep_learn_fail();
+                }
             }
         }
     }
