@@ -25,9 +25,9 @@ void aqualarm_device_heart_check(void)
         device = rt_slist_entry(node, aqualarm_device_t, slist);
         if(device->type == DEVICE_TYPE_MAINUNIT || device->type == DEVICE_TYPE_ALLINONE)
         {
-            if(device->heart)
+            if(device->recv)
             {
-                device->heart = 0;
+                device->recv = 0;
             }
             else
             {
@@ -72,5 +72,6 @@ void sync_timer_callback(void)
 
 void heart_init(void)
 {
+    aq_device_heart_recv_clear();
     sync_timer = rt_timer_create("sync_timer", sync_timer_callback, RT_NULL, 1000, RT_TIMER_FLAG_SOFT_TIMER | RT_TIMER_FLAG_ONE_SHOT);
 }

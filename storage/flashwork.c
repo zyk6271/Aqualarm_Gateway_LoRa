@@ -288,8 +288,8 @@ void aq_device_print(void)
         aqualarm_device_t *device = rt_slist_entry(node, aqualarm_device_t, slist);
         LOG_I("device info:addr %d,bind %d,slot %d,ver v1.%d.%d,rssi %d,bat %d\r\n",device->device_id,\
                 device->bind_id,device->slot,device->main_ver,device->sub_ver,device->rssi,device->battery);
-        LOG_I("device status:battery %d,waterleak %d,ack %d,online %d,upload %d\r\n",device->battery,\
-                device->waterleak,device->heart,device->online,device->upload);
+        LOG_I("device status:battery %d,waterleak %d,recv %d,online %d,upload %d\r\n",device->battery,\
+                device->waterleak,device->recv,device->online,device->upload);
     }
 }
 MSH_CMD_EXPORT(aq_device_print,aq_device_print);
@@ -303,7 +303,7 @@ void aqualarm_device_heart(rx_format *rx_frame)
         device = rt_slist_entry(node, aqualarm_device_t, slist);
         if(device->device_id == rx_frame->source_addr)
         {
-            device->heart = 1;
+            device->recv = 1;
             device->rssi = rx_frame->rssi;
             aq_device_online_set(rx_frame->source_addr,1);
             wifi_device_heart_upload(rx_frame->source_addr,1);
@@ -458,4 +458,18 @@ uint32_t aq_device_doorunit_find(uint32_t device_id)
     }
 
     return 0;
+}
+
+void aq_device_heart_recv_clear(void)
+{
+    rt_slist_t *node;
+    aqualarm_device_t *device = RT_NULL;
+    rt_slist_for_each(node, &_device_list)
+    {
+        device = rt_slist_entry(node, aqualarm_device_t, slist);
+        if(device->type == DEVICE_TYPE_MAINUNIT || device->type == DEVICE_TYPE_ALLINONE)
+        {
+            device->recv = 0;
+        }
+    }
 }

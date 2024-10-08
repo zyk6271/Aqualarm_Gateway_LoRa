@@ -12,7 +12,7 @@ typedef struct{
     uint32_t bind_id;
     uint8_t slot;
     uint8_t type;
-    uint8_t heart;
+    uint8_t recv;
     uint8_t online;
     uint8_t upload;
     uint8_t main_ver;
