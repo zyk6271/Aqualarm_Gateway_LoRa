@@ -195,15 +195,15 @@ void wifi_mainunit_rssi_upload(uint32_t device_id,int rssi)
     uint8_t level = 0;
     char *addr_buf = rt_malloc(16);
     rt_sprintf(addr_buf,"%ld",device_id);
-    if(rssi < -100)
+    if(rssi < -94)
     {
         level = 0;
     }
-    else if(rssi >= -100 && rssi < -90)
+    else if(rssi >= -94 && rssi < -75)
     {
         level = 1;
     }
-    else if(rssi >= -90)
+    else if(rssi >= -75)
     {
         level = 2;
     }
