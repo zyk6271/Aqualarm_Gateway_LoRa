@@ -922,6 +922,7 @@ void inform_dev_del_status(unsigned char result)
     switch(result) {
         case 0:            //本地恢复出厂
             LOG_I("Local Reset Success\r\n");
+            ef_env_set_default();
             rt_hw_cpu_reset();
             break;
         case 1:            //远程移除

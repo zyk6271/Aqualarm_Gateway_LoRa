@@ -98,7 +98,6 @@ void key_on_off_long_click_handle(void)
             LOG_D("key_on_off_long_click_handle\r\n");
             key_on_off_flag = 1;
             led_beep_start(5);
-            ef_env_set_default();
             reset_factory_setting();
             wifi_factory_reset_timer_start();
         }

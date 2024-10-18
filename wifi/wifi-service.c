@@ -41,20 +41,24 @@ void wifi_network_rst_timer_callback(void *parameter)
     {
         wifi_network_rst_cnt++;
         mcu_reset_wifi();
-        LOG_D("wifi reset retry %d\r\n",wifi_network_rst_cnt);
+        LOG_D("wifi network reset retry %d\r\n",wifi_network_rst_cnt);
     }
     else if(wifi_network_rst_cnt < 3 && mcu_get_reset_wifi_flag() == 1)
     {
         wifi_network_rst_cnt++;
-        LOG_I("wifi reset success\r\n");
+        LOG_I("wifi network reset success\r\n");
         rt_timer_stop(wifi_network_rst_timer);
         beep_wifi_reset_success();
+        rt_thread_mdelay(3000);
+        rt_hw_cpu_reset();
     }
     else if(wifi_network_rst_cnt >= 3)
     {
-        LOG_E("wifi reset failed\r\n");
+        LOG_E("wifi network reset failed\r\n");
         rt_timer_stop(wifi_network_rst_timer);
         beep_wifi_reset_fail();
+        rt_thread_mdelay(3000);
+        rt_hw_cpu_reset();
     }
 }
 
@@ -72,6 +76,10 @@ void wifi_factory_rst_timer_callback(void *parameter)
     }
     else
     {
+        LOG_E("wifi_factory_rst failed\r\n");
+        rt_timer_stop(wifi_network_rst_timer);
+        beep_wifi_reset_fail();
+        rt_thread_mdelay(3000);
         rt_hw_cpu_reset();
     }
 }

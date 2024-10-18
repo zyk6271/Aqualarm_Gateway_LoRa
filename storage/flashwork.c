@@ -303,9 +303,13 @@ void aqualarm_device_heart(rx_format *rx_frame)
         device = rt_slist_entry(node, aqualarm_device_t, slist);
         if(device->device_id == rx_frame->source_addr)
         {
+            if(device->online == 0)//LoRa断联同步
+            {
+                aq_device_online_set(rx_frame->source_addr,1);
+                device_sync_start();
+            }
             device->recv = 1;
             device->rssi = rx_frame->rssi;
-            aq_device_online_set(rx_frame->source_addr,1);
             wifi_device_heart_upload(rx_frame->source_addr,1);
         }
     }
