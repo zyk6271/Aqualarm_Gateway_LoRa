@@ -13,8 +13,17 @@ rt_slist_t *sync_node;
 rt_timer_t sync_timer = RT_NULL;
 
 rt_thread_t heart_t = RT_NULL;
+RNG_HandleTypeDef rng_handle;
 
 extern rt_slist_t _device_list;
+
+uint32_t random_second_get(uint32_t min,uint32_t max)
+{
+    uint32_t value, second = 0;
+    HAL_RNG_GenerateRandomNumber(&rng_handle, &value);
+    second = value % (max - min + 1) + min;
+    return second;
+}
 
 void aqualarm_device_heart_check(void)
 {
@@ -72,6 +81,12 @@ void sync_timer_callback(void)
 
 void heart_init(void)
 {
+    rng_handle.Instance = RNG;
+    if (HAL_RNG_Init(&rng_handle) != HAL_OK)
+    {
+        Error_Handler();
+    }
+
     aq_device_heart_recv_clear();
     sync_timer = rt_timer_create("sync_timer", sync_timer_callback, RT_NULL, 1000, RT_TIMER_FLAG_SOFT_TIMER | RT_TIMER_FLAG_ONE_SHOT);
 }

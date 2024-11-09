@@ -1144,6 +1144,12 @@
         <name>$PROJ_DIR$/../Drivers/STM32WLxx_HAL_Driver/Src/stm32wlxx_hal_iwdg.c</name>
       </file>
       <file>
+        <name>$PROJ_DIR$/../Drivers/STM32WLxx_HAL_Driver/Src/stm32wlxx_hal_rng.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$/../Drivers/STM32WLxx_HAL_Driver/Src/stm32wlxx_hal_rng_ex.c</name>
+      </file>
+      <file>
         <name>$PROJ_DIR$/../Drivers/STM32WLxx_HAL_Driver/Src/stm32wlxx_hal_rtc.c</name>
       </file>
       <file>
