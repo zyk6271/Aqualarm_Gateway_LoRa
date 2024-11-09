@@ -1,5 +1,6 @@
 #include "rtthread.h"
 #include "heart.h"
+#include "board.h"
 #include "flashwork.h"
 #include "radio_encoder.h"
 #include "wifi-api.h"
