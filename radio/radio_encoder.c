@@ -72,7 +72,7 @@ rt_err_t rf_send_with_lbt(uint8_t freq_type,char* data_ptr,uint8_t data_size)
     {
         rt_completion_init(&rf_txdone_sem);
         RF_Send(data_ptr, data_size);
-        if(rt_completion_wait(&rf_txdone_sem, 2000) == RT_EOK)
+        if(rt_completion_wait(&rf_txdone_sem, 1000) == RT_EOK)
         {
             LOG_D("rf_send_with_lbt send packet success");
             return RT_EOK;
