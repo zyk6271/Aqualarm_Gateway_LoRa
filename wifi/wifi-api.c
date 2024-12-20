@@ -195,15 +195,15 @@ void wifi_mainunit_rssi_upload(uint32_t device_id,int rssi)
     uint8_t level = 0;
     char *addr_buf = rt_malloc(16);
     rt_sprintf(addr_buf,"%ld",device_id);
-    if(rssi < -94)
+    if(rssi < -89)
     {
         level = 0;
     }
-    else if(rssi >= -94 && rssi < -75)
+    else if(rssi >= -89 && rssi < -78)
     {
         level = 1;
     }
-    else if(rssi >= -75)
+    else if(rssi >= -78)
     {
         level = 2;
     }
@@ -743,22 +743,24 @@ void wifi_heart_reponse(char *addr_buf)//called by wifi module
     {
         if(aq_device_online_get(device->bind_id) == 1 && aq_device_online_get(device->device_id) == 1)
         {
-            wifi_device_heart_upload(device->device_id,1);
+            heart_beat_report(addr_buf,0);
+            user_updata_subden_online_state(0,addr_buf,1,1);
         }
         else
         {
-            wifi_device_heart_upload(device->device_id,0);
+            user_updata_subden_online_state(0,addr_buf,1,0);
         }
     }
     else
     {
         if(aq_device_online_get(device->device_id))
         {
-            wifi_device_heart_upload(device->device_id,1);
+            heart_beat_report(addr_buf,0);
+            user_updata_subden_online_state(0,addr_buf,1,1);
         }
         else
         {
-            wifi_device_heart_upload(device->device_id,0);
+            user_updata_subden_online_state(0,addr_buf,1,0);
         }
     }
 }

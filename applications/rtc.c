@@ -17,7 +17,7 @@ void rtc_thread_entry(void *parameter)
     while(1)
     {
         rt_sem_take(rtc_sem, RT_WAITING_FOREVER);
-        aqualarm_device_heart_check();
+        aq_device_heart_check();
     }
 }
 

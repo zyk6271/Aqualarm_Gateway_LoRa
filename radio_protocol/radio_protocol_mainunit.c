@@ -447,7 +447,7 @@ void radio_frame_mainunit_parse(rx_format *rx_frame)
     }
 
     rf_led(3);
-    aqualarm_device_heart(rx_frame);
+    aq_device_heart(rx_frame);
     wifi_mainunit_rssi_upload(rx_frame->source_addr,rx_frame->rssi);
 }
 

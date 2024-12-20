@@ -28,7 +28,7 @@
 ******************************************************************************/
 #define GW_PRODUCT_PID "19tgfa05ptvrapap"    //开发平台创建产品后生成的16位字符产品唯一标识
 
-#define MCU_VER "1.0.9"                                 //用户的软件版本,用于MCU固件升级,MCU升级版本需修改
+#define MCU_VER "1.0.10"                                 //用户的软件版本,用于MCU固件升级,MCU升级版本需修改
 
 //配网方式选择,默认为CONFIG_MODE_DEFAULT,只能三选一
 #define CONFIG_MODE     CONFIG_MODE_DEFAULT             //默认配网方式

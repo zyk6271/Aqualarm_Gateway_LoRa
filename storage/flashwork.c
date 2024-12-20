@@ -58,7 +58,7 @@ int storage_init(void)
         return RT_ERROR;
     };
     LOG_I("Storage Init Success\r\n");
-    read_device_from_flash();
+    aq_device_load();
     aq_device_print();
     return RT_EOK;
 }
@@ -89,7 +89,7 @@ void flash_set_key(char *key_name,uint32_t value)
     rt_free(value_buf);
 }
 
-void read_device_from_flash(void)
+void aq_device_load(void)
 {
     total_slot = flash_get_key("slot");
 
@@ -294,7 +294,24 @@ void aq_device_print(void)
 }
 MSH_CMD_EXPORT(aq_device_print,aq_device_print);
 
-void aqualarm_device_heart(rx_format *rx_frame)
+void aq_bind_heart_refresh(uint32_t bind_addr)
+{
+    rt_slist_t *node;
+    char *addr_buf = rt_malloc(16);
+    aqualarm_device_t *device = RT_NULL;
+    rt_slist_for_each(node, &_device_list)
+    {
+        device = rt_slist_entry(node, aqualarm_device_t, slist);
+        if(device->bind_id == bind_addr)
+        {
+            rt_sprintf(addr_buf,"%ld",device->device_id);
+            user_updata_subden_online_state(0,addr_buf,1,device->online);
+        }
+    }
+    rt_free(addr_buf);
+}
+
+void aq_device_heart(rx_format *rx_frame)
 {
     rt_slist_t *node;
     aqualarm_device_t *device = RT_NULL;
@@ -303,10 +320,10 @@ void aqualarm_device_heart(rx_format *rx_frame)
         device = rt_slist_entry(node, aqualarm_device_t, slist);
         if(device->device_id == rx_frame->source_addr)
         {
-            if(device->online == 0)//LoRa断联同步
+            if(device->online == 0)
             {
                 aq_device_online_set(rx_frame->source_addr,1);
-                device_sync_start();
+                aq_bind_heart_refresh(rx_frame->source_addr);
             }
             device->recv = 1;
             device->rssi = rx_frame->rssi;
@@ -315,17 +332,25 @@ void aqualarm_device_heart(rx_format *rx_frame)
     }
 }
 
-void aqualarm_slaver_heart(uint32_t slaver_addr)
+void aq_device_heart_check(void)
 {
     rt_slist_t *node;
     aqualarm_device_t *device = RT_NULL;
     rt_slist_for_each(node, &_device_list)
     {
         device = rt_slist_entry(node, aqualarm_device_t, slist);
-        if(device->device_id == slaver_addr)
+        if(device->type == DEVICE_TYPE_MAINUNIT || device->type == DEVICE_TYPE_ALLINONE)
         {
-            aq_device_online_set(slaver_addr,1);
-            wifi_device_heart_upload(slaver_addr,1);
+            if(device->recv)
+            {
+                device->recv = 0;
+            }
+            else
+            {
+                aq_device_online_set(device->device_id,0);
+                wifi_device_heart_upload(device->device_id,0);
+                LOG_E("aq_device_offline_set %d\r\n",device->device_id);
+            }
         }
     }
 }

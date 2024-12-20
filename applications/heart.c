@@ -26,29 +26,6 @@ uint32_t random_second_get(uint32_t min,uint32_t max)
     return second;
 }
 
-void aqualarm_device_heart_check(void)
-{
-    rt_slist_t *node;
-    aqualarm_device_t *device = RT_NULL;
-    rt_slist_for_each(node, &_device_list)
-    {
-        device = rt_slist_entry(node, aqualarm_device_t, slist);
-        if(device->type == DEVICE_TYPE_MAINUNIT || device->type == DEVICE_TYPE_ALLINONE)
-        {
-            if(device->recv)
-            {
-                device->recv = 0;
-            }
-            else
-            {
-                aq_device_online_set(device->device_id,0);
-                wifi_device_heart_upload(device->device_id,0);
-                LOG_E("aq_device_offline_set %d\r\n",device->device_id);
-            }
-        }
-    }
-}
-
 void device_sync_start(void)
 {
     sync_node = rt_slist_first(&_device_list);
@@ -58,7 +35,7 @@ void device_sync_start(void)
     }
 }
 
-void sync_timer_callback(void)
+void sync_timer_callback(void *parameter)
 {
     aqualarm_device_t *device = RT_NULL;
     while (sync_node != RT_NULL)
@@ -69,14 +46,14 @@ void sync_timer_callback(void)
             radio_mainunit_request_sync(device->device_id);
             LOG_I("radio_mainunit_request_sync %d\r\n", device->device_id);
             sync_node = rt_slist_next(sync_node);
-            break; // Found a matching device, no need to continue the loop
+            break;
         }
         sync_node = rt_slist_next(sync_node);
     }
 
     if (sync_node != RT_NULL)
     {
-        rt_timer_start(sync_timer); // Restart timer if we found a device
+        rt_timer_start(sync_timer);
     }
 }
 
