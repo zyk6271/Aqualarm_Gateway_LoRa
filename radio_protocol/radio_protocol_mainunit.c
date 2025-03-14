@@ -234,6 +234,10 @@ static void radio_frame_mainunit_parse_warn(rx_format *rx_frame)
             slaver_addr = rx_frame->rx_data[(i * 4) + 4] << 24 | rx_frame->rx_data[(i * 4) + 5] << 16 \
                     | rx_frame->rx_data[(i * 4) + 6] << 8 | rx_frame->rx_data[(i * 4) + 7];
             wifi_device_heart_upload(slaver_addr,0);
+            if(slaver_addr >= 20000000 && slaver_addr < 30000000)
+            {
+                wifi_mainunit_valve_upload(rx_frame->source_addr,0);//主控开关阀
+            }
         }
         break;
     case 6://slaver heart
@@ -244,6 +248,10 @@ static void radio_frame_mainunit_parse_warn(rx_format *rx_frame)
         wifi_device_heart_upload(slaver_addr,1);
         wifi_device_rssi_upload(slaver_addr,sub_rssi);
         wifi_endunit_upload_warning(slaver_addr,2,sub_value);
+        if(sub_value == 2)//battery 10%
+        {
+            wifi_mainunit_valve_upload(rx_frame->source_addr,0);//主控开关阀
+        }
         if(sub_status == 0)
         {
             wifi_endunit_warning_reset(slaver_addr);
