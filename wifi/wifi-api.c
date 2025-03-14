@@ -19,7 +19,8 @@
 #define DBG_LVL DBG_LOG
 #include <rtdbg.h>
 
-static char MAINUNIT_PRODUCT_PID[] = {"cbzww5ywtyczyaau"};
+static char MAINUNIT_PRODUCT_PID[] = {"37x0zspuatfwqhmj"};
+static char ALLINONE_PRODUCT_PID[] = {"cbzww5ywtyczyaau"};
 static char ENDUNIT_PRODUCT_PID[] = {"lnbkva6cip8dw7vy"};
 static char DOOR_PRODUCT_PID[] = {"emnzq3qxwfplx7db"};
 static char MOTION_SENSOR_PRODUCT_PID[] = {"pgaj1kon8xp12ysz"};
@@ -158,6 +159,15 @@ void wifi_mainunit_add_device(uint32_t device_id,char *ver_str)
     rt_sprintf(addr_buf,"%ld",device_id);
     local_add_subdev_limit(1,0,0x01);
     gateway_subdevice_add(ver_str,MAINUNIT_PRODUCT_PID,0,addr_buf,10,1);
+    rt_free(addr_buf);
+}
+
+void wifi_allinone_add_device(uint32_t device_id,char *ver_str)
+{
+    char *addr_buf = rt_malloc(16);
+    rt_sprintf(addr_buf,"%ld",device_id);
+    local_add_subdev_limit(1,0,0x01);
+    gateway_subdevice_add(ver_str,ALLINONE_PRODUCT_PID,0,addr_buf,10,1);
     rt_free(addr_buf);
 }
 
@@ -633,8 +643,11 @@ void wifi_device_add(uint32_t device_id)
 
     switch(device->type)
     {
-    case DEVICE_TYPE_MAINUNIT:
     case DEVICE_TYPE_ALLINONE:
+        rt_sprintf(ver_str, "1.%d.%d",device->main_ver,device->sub_ver);
+        wifi_allinone_add_device(device_id,ver_str);
+        break;
+    case DEVICE_TYPE_MAINUNIT:
         rt_sprintf(ver_str, "1.%d.%d",device->main_ver,device->sub_ver);
         wifi_mainunit_add_device(device_id,ver_str);
         break;

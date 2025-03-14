@@ -26,6 +26,8 @@ void led_init(void)
 
     agile_led_set_light_mode(led_obj_beep, "500,1", 1);
     agile_led_start(led_obj_beep);
+    agile_led_set_light_mode(led_obj_rf_green, "200,0", -1);
+    agile_led_start(led_obj_rf_green);
 }
 
 void led_beep_start(uint8_t count)

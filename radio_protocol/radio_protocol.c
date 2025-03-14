@@ -14,7 +14,11 @@
 #define DBG_LVL DBG_LOG
 #include <rtdbg.h>
 
-uint8_t allow_add_device = 0;
+void radio_protocol_print(void)
+{
+    LOG_I("NETWORK_VERSION:%d,DEVICE_TYPE_SELECT:%d,NET_REGION_SELECT:%d",\
+                NETWORK_VERSION,DEVICE_TYPE_SELECT,NET_REGION_SELECT);
+}
 
 void radio_protocol_parse(int rssi,int snr,uint8_t* data,size_t len)
 {
@@ -46,6 +50,7 @@ void radio_protocol_parse(int rssi,int snr,uint8_t* data,size_t len)
         LOG_E("CRC is fail,src is 0x%02X,calc is 0x%02X\r\n",rx_frame.src_crc,rx_frame.calc_crc);
         return;
     }
+    rx_frame.snr = snr;
     rx_frame.rssi = rssi;
     rx_frame.rx_data = &data[11];
     rx_frame.rx_len = len - 11;
