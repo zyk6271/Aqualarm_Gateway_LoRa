@@ -19,42 +19,42 @@
 
 void device_warning_status_parse(uint32_t source_addr,uint8_t value)
 {
-    if(aq_device_warning_status_get(source_addr) == value)
-    {
-        return;
-    }
-    else
-    {
-        aq_device_warning_status_set(source_addr,value);
-    }
-
-    switch(value)
-    {
-    case ValveClose:
-    case ValveOpen:
-        wifi_mainunit_clear_warning(source_addr);
-        break;
-    case MasterSensorLost:
-        wifi_mainunit_upload_warning(source_addr,2,1);
-        break;
-    case MasterSensorLeak:
-        wifi_mainunit_upload_warning(source_addr,1,1);
-        break;
-    case MasterSensorAbnormal:
-        wifi_mainunit_upload_warning(source_addr,1,0);
-        break;
-    case MasterLowTemp:
-        wifi_mainunit_upload_warning(source_addr,3,1);
-        break;
-    case InternalValveFail:
-        wifi_mainunit_upload_warning(source_addr,0,3);
-        break;
-    case ExtendValveFail:
-        wifi_mainunit_upload_warning(source_addr,0,4);
-        break;
-    default:
-        break;
-    }
+//    if(aq_device_warning_status_get(source_addr) == value)
+//    {
+//        return;
+//    }
+//    else
+//    {
+//        aq_device_warning_status_set(source_addr,value);
+//    }
+//
+//    switch(value)
+//    {
+//    case ValveClose:
+//    case ValveOpen:
+//        wifi_mainunit_clear_warning(source_addr);
+//        break;
+//    case MasterSensorLost:
+//        wifi_mainunit_upload_warning(source_addr,2,1);
+//        break;
+//    case MasterSensorLeak:
+//        wifi_mainunit_upload_warning(source_addr,1,1);
+//        break;
+//    case MasterSensorAbnormal:
+//        wifi_mainunit_upload_warning(source_addr,1,0);
+//        break;
+//    case MasterLowTemp:
+//        wifi_mainunit_upload_warning(source_addr,3,1);
+//        break;
+//    case InternalValveFail:
+//        wifi_mainunit_upload_warning(source_addr,0,3);
+//        break;
+//    case ExtendValveFail:
+//        wifi_mainunit_upload_warning(source_addr,0,4);
+//        break;
+//    default:
+//        break;
+//    }
 }
 static void radio_frame_mainunit_parse_heart(rx_format *rx_frame)
 {
