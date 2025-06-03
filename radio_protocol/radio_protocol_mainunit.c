@@ -38,8 +38,10 @@ void device_warning_status_parse(uint32_t source_addr,uint32_t value)
         wifi_mainunit_upload_warning(source_addr,3,1);
         break;
     case InternalValveFail:
+        wifi_mainunit_upload_warning(source_addr,0,3);
+        break;
     case ExtendValveFail:
-        wifi_mainunit_upload_warning(source_addr,0,1);
+        wifi_mainunit_upload_warning(source_addr,0,4);
         break;
     default:
         break;
