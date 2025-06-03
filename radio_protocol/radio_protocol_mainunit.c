@@ -17,8 +17,17 @@
 #define DBG_LVL DBG_LOG
 #include <rtdbg.h>
 
-void device_warning_status_parse(uint32_t source_addr,uint32_t value)
+void device_warning_status_parse(uint32_t source_addr,uint8_t value)
 {
+    if(aq_device_warning_status_get(source_addr) == value)
+    {
+        return;
+    }
+    else
+    {
+        aq_device_warning_status_set(source_addr,value);
+    }
+
     switch(value)
     {
     case ValveClose:

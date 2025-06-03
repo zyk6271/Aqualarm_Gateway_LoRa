@@ -8,7 +8,7 @@ typedef struct{
     int rssi;
     uint8_t valve;
     uint8_t battery;
-    uint8_t waterleak;
+    uint8_t warning_status;
     uint32_t bind_id;
     uint8_t slot;
     uint8_t type;

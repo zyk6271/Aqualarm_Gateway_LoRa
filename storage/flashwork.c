@@ -288,8 +288,8 @@ void aq_device_print(void)
         aqualarm_device_t *device = rt_slist_entry(node, aqualarm_device_t, slist);
         LOG_I("device info:addr %d,bind %d,slot %d,ver v1.%d.%d,rssi %d,bat %d\r\n",device->device_id,\
                 device->bind_id,device->slot,device->main_ver,device->sub_ver,device->rssi,device->battery);
-        LOG_I("device status:battery %d,waterleak %d,recv %d,online %d,upload %d\r\n",device->battery,\
-                device->waterleak,device->recv,device->online,device->upload);
+        LOG_I("device status:battery %d,warning_status %d,recv %d,online %d,upload %d\r\n",device->battery,\
+                device->warning_status,device->recv,device->online,device->upload);
     }
 }
 MSH_CMD_EXPORT(aq_device_print,aq_device_print);
@@ -452,6 +452,39 @@ void aq_device_upload_set(uint32_t device_id,uint8_t state)
             {
                 device->upload = state;
                 aq_device_save(device);
+            }
+        }
+    }
+}
+
+uint8_t aq_device_warning_status_get(uint8_t device_id)
+{
+    rt_slist_t *node;
+    aqualarm_device_t *device = RT_NULL;
+    rt_slist_for_each(node, &_device_list)
+    {
+        device = rt_slist_entry(node, aqualarm_device_t, slist);
+        if(device->device_id == device_id)
+        {
+            return device->warning_status;
+        }
+    }
+
+    return 0;
+}
+
+void aq_device_warning_status_set(uint32_t device_id,uint8_t state)
+{
+    rt_slist_t *node;
+    aqualarm_device_t *device = RT_NULL;
+    rt_slist_for_each(node, &_device_list)
+    {
+        device = rt_slist_entry(node, aqualarm_device_t, slist);
+        if(device->device_id == device_id)
+        {
+            if(device->warning_status != state)
+            {
+                device->warning_status = state;
             }
         }
     }
